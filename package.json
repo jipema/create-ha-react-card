@@ -2,7 +2,7 @@
   "name": "create-react-hass-card",
   "description": "Create React Hass Card",
   "private": false,
-  "version": "0.0.1-beta.1",
+  "version": "0.0.1-beta.2",
   "type": "module",
   "scripts": {
     "dev": "vite --host",
@@ -13,21 +13,21 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/example-npm-package.umd.cjs",
-  "module": "./dist/example-npm-package.js",
+  "main": "./dist/create-react-hass-card.umd.cjs",
+  "module": "./dist/create-react-hass-card.js",
   "exports": {
     ".": {
       "import": {
-        "default": "./dist/example-npm-package.js",
-        "types": "./dist/index.d.ts"
+        "default": "./dist/create-react-hass-card.js",
+        "types": "./dist/lib/index.d.ts"
       },
       "require": {
-        "default": "./dist/example-npm-package.umd.cjs",
-        "types": "./dist/index.d.ts"
+        "default": "./dist/create-react-hass-card.umd.cjs",
+        "types": "./dist/lib/index.d.ts"
       }
     }
   },
-  "types": "./dist/index.d.ts",
+  "types": "./dist/lib/index.d.ts",
   "dependencies": {
     "custom-card-helpers": "^1.9.0",
     "react": "^18.2.0",
