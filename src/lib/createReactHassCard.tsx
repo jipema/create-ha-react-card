@@ -120,9 +120,10 @@ export function createReactHassCard(
 }
 
 export const useLovelaceCard = (
-  type: "entities" | "entity",
+  type: string,
   hass?: HomeAssistant,
-  config?: Omit<LovelaceCardConfig, "type">
+  config?: Omit<LovelaceCardConfig, "type">,
+  children?: React.ReactNode
 ) => {
   if (!hass || !type) return null;
   const LovelaceCard = `hui-${type}-card`;
@@ -136,5 +137,5 @@ export const useLovelaceCard = (
   };
 
   // @ts-expect-error todo: improve typing
-  return <LovelaceCard ref={refFn} />;
+  return <LovelaceCard ref={refFn}>{children}</LovelaceCard>;
 };
