@@ -8,13 +8,7 @@ export type CardDialogProps = {
   onClose?: () => void;
 };
 
-export function CardDialog({
-  title,
-  titleHover,
-  content,
-  fullScreenOnMobile = true,
-  onClose,
-}: CardDialogProps) {
+export function CardDialog({ title, titleHover, content, fullScreenOnMobile = true, onClose }: CardDialogProps) {
   const elRef = useRef<HTMLElement | null>(null);
 
   const handleDialogRef = useCallback(
@@ -60,7 +54,15 @@ export function CardDialog({
 
   return (
     <ha-dialog open hideactions flexcontent ref={handleDialogRef}>
-      <div className="dialog-wrapper">
+      <div
+        className="dialog-wrapper"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+          overflow: "hidden",
+        }}
+      >
         {title !== false && (
           <ha-dialog-header slot="heading">
             <ha-icon-button slot="navigationIcon" dialogaction="cancel">
@@ -80,19 +82,14 @@ export function CardDialog({
               </svg>
             </ha-icon-button>
 
-            <span
-              slot="title"
-              title={
-                titleHover || (typeof title === "string" ? title : undefined)
-              }
-            >
+            <span slot="title" title={titleHover || (typeof title === "string" ? title : undefined)}>
               {title}
             </span>
           </ha-dialog-header>
         )}
         <div
           className="content"
-          style={{ padding: 16, paddingTop: title !== false ? 0 : undefined }}
+          style={{ padding: 16, paddingTop: title !== false ? 0 : undefined, flexGrow: 2, overflowY: "auto" }}
         >
           {content}
         </div>

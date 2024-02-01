@@ -126,7 +126,7 @@ export function createReactHassCard(cardName: string, Component: React.FC<HassCa
       if (this._root?.render) {
         this._root.render(
           <React.StrictMode>
-            <CardWrapper {...this._props} Component={ComponentMemo} />;
+            <CardWrapper {...this._props} Component={ComponentMemo} />
           </React.StrictMode>
         );
       }
