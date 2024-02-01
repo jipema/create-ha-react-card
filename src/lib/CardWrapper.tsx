@@ -3,14 +3,7 @@ import { CardDialog, CardDialogProps } from "./CardDialog";
 import { HassCardProps } from "./createReactHassCard";
 
 type CardWrapperProps = HassCardProps & {
-  Component: React.FC<
-    HassCardProps & {
-      openDialog: (dialogParams: CardDialogProps) => void;
-      closeDialog: () => void;
-      openEntityMoreInfo: (entityId: string) => void;
-      closeEntityMoreInfo: () => void;
-    } & unknown
-  >;
+  Component: React.FC<HassCardProps & unknown>;
 };
 
 export function CardWrapper({ Component, ...props }: CardWrapperProps) {

@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useCallback, useMemo } from "react";
 import ReactDOM from "react-dom/client";
 
 import {
@@ -9,9 +9,13 @@ import {
 
 // utils
 import { isPanelValue, omit } from "../utils/misc";
+
+// components
 import { CardWrapper } from "./CardWrapper";
 
 // types
+import type { CardDialogProps } from "./CardDialog";
+
 declare module "react" {
   namespace JSX {
     interface IntrinsicElements {
@@ -27,6 +31,10 @@ export type HassCardProps = {
   hass?: HomeAssistant;
   config?: HassCardConfig;
   narrow?: boolean;
+  openDialog: (dialogParams: CardDialogProps) => void;
+  closeDialog: () => void;
+  openEntityMoreInfo: (entityId: string) => void;
+  closeEntityMoreInfo: () => void;
 };
 export type HassCardConfig = Record<string, unknown> & {
   type: string;
@@ -59,6 +67,10 @@ export function createReactHassCard(
       hass: undefined,
       config: undefined,
       narrow: false,
+      openDialog: () => undefined,
+      closeDialog: () => undefined,
+      openEntityMoreInfo: () => undefined,
+      closeEntityMoreInfo: () => undefined,
     };
 
     connectedCallback() {
@@ -142,17 +154,50 @@ export const useLovelaceCard = (
   config?: Omit<LovelaceCardConfig, "type">,
   children?: React.ReactNode
 ) => {
-  if (!hass || !type) return null;
-  const LovelaceCard = `hui-${type}-card`;
+  const CardTag = `hui-${type}-card`;
+  const refFn = useCallback(
+    (el: LovelaceCard) => {
+      if (!el || !hass) return;
 
-  const refFn = (el: LovelaceCard) => {
-    if (!el || !hass) return;
+      el.hass = hass;
+      if (config && el.setConfig)
+        el.setConfig({ ...config, type: config.type || type });
+    },
+    [config, hass, type]
+  );
 
-    el.hass = hass;
-    if (config && el.setConfig)
-      el.setConfig({ ...config, type: config.type || type });
-  };
+  const card = useMemo(
+    // @ts-expect-error custom element props
+    () => (!hass ? undefined : <CardTag ref={refFn}>{children}</CardTag>),
+    [CardTag, children, hass, refFn]
+  );
 
-  // @ts-expect-error todo: improve typing
-  return <LovelaceCard ref={refFn}>{children}</LovelaceCard>;
+  return card;
+};
+
+export const useHaElement = (
+  type: string,
+  hass?: HomeAssistant,
+  config?: Omit<LovelaceCardConfig, "type">,
+  children?: React.ReactNode
+) => {
+  const ElementTag = `ha-${type}`;
+  const ref = useCallback(
+    (el: LovelaceCard) => {
+      if (!el || !hass) return;
+
+      el.hass = hass;
+      if (config && el.setConfig)
+        el.setConfig({ ...config, type: config.type || type });
+    },
+    [config, hass, type]
+  );
+
+  const card = useMemo(
+    // @ts-expect-error custom element props
+    () => (!hass ? undefined : <ElementTag ref={ref}>{children}</ElementTag>),
+    [ElementTag, children, hass, ref]
+  );
+
+  return card;
 };
