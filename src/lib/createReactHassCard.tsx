@@ -77,7 +77,7 @@ export function createReactHassCard(
       this._root = ReactDOM.createRoot(this);
       this._root.render(
         <React.StrictMode>
-          <CardWrapper {...this._props} Component={ComponentMemo} />;
+          <CardWrapper {...this._props} Component={ComponentMemo} />
         </React.StrictMode>
       );
     }
