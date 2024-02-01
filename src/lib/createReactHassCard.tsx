@@ -9,8 +9,20 @@ import {
 
 // utils
 import { isPanelValue, omit } from "../utils/misc";
+import { CardWrapper } from "./CardWrapper";
 
 // types
+declare module "react" {
+  namespace JSX {
+    interface IntrinsicElements {
+      "ha-card": unknown;
+      "ha-dialog": unknown;
+      "ha-dialog-header": unknown;
+      "ha-icon-button": unknown;
+    }
+  }
+}
+
 export type HassCardProps = {
   hass?: HomeAssistant;
   config?: HassCardConfig;
@@ -50,10 +62,12 @@ export function createReactHassCard(
     };
 
     connectedCallback() {
-      const cpn = <ComponentMemo {...this._props} />;
-
       this._root = ReactDOM.createRoot(this);
-      this._root.render(<React.StrictMode>{cpn}</React.StrictMode>);
+      this._root.render(
+        <React.StrictMode>
+          <CardWrapper {...this._props} Component={ComponentMemo} />;
+        </React.StrictMode>
+      );
     }
     disconnectedCallback() {
       this._root?.unmount?.();
@@ -110,8 +124,11 @@ export function createReactHassCard(
       else if (name === "narrow") this._props["narrow"] = !!value;
 
       if (this._root?.render) {
-        const cpn = <ComponentMemo {...this._props} />;
-        this._root.render(<React.StrictMode>{cpn}</React.StrictMode>);
+        this._root.render(
+          <React.StrictMode>
+            <CardWrapper {...this._props} Component={ComponentMemo} />;
+          </React.StrictMode>
+        );
       }
     }
   }
