@@ -1,11 +1,7 @@
-import React, { memo, useCallback, useMemo } from "react";
+import React, { memo, useCallback } from "react";
 import ReactDOM from "react-dom/client";
 
-import {
-  HomeAssistant,
-  LovelaceCard,
-  LovelaceCardConfig,
-} from "custom-card-helpers";
+import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "custom-card-helpers";
 
 // utils
 import { isPanelValue, omit } from "../utils/misc";
@@ -54,11 +50,7 @@ export type HassCardConfig = Record<string, unknown> & {
   };
 };
 
-export function createReactHassCard(
-  cardName: string,
-  Component: React.FC<HassCardProps & unknown>,
-  cardSize?: number
-) {
+export function createReactHassCard(cardName: string, Component: React.FC<HassCardProps & unknown>, cardSize?: number) {
   const ComponentMemo = memo(Component);
 
   class HassCard extends HTMLElement {
@@ -105,10 +97,7 @@ export function createReactHassCard(
       this.updateProps("route", newVal);
     }
 
-    updateProps(
-      name: keyof typeof this._props | "panel" | "route",
-      value: unknown
-    ): void {
+    updateProps(name: keyof typeof this._props | "panel" | "route", value: unknown): void {
       if (!name) return;
 
       if (name === "panel" && isPanelValue(value)) {
@@ -131,8 +120,7 @@ export function createReactHassCard(
       }
 
       if (name === "hass") this._props["hass"] = value as HassCardProps["hass"];
-      else if (name === "config")
-        this._props["config"] = value as HassCardProps["config"];
+      else if (name === "config") this._props["config"] = value as HassCardProps["config"];
       else if (name === "narrow") this._props["narrow"] = !!value;
 
       if (this._root?.render) {
@@ -160,19 +148,13 @@ export const useLovelaceCard = (
       if (!el || !hass) return;
 
       el.hass = hass;
-      if (config && el.setConfig)
-        el.setConfig({ ...config, type: config.type || type });
+      if (config && el.setConfig) el.setConfig({ ...config, type: config.type || type });
     },
     [config, hass, type]
   );
 
-  const card = useMemo(
-    // @ts-expect-error custom element props
-    () => (!hass ? undefined : <CardTag ref={refFn}>{children}</CardTag>),
-    [CardTag, children, hass, refFn]
-  );
-
-  return card;
+  // @ts-expect-error custom element props
+  return <CardTag ref={refFn}>{children}</CardTag>;
 };
 
 export const useHaElement = (
@@ -187,17 +169,11 @@ export const useHaElement = (
       if (!el || !hass) return;
 
       el.hass = hass;
-      if (config && el.setConfig)
-        el.setConfig({ ...config, type: config.type || type });
+      if (config && el.setConfig) el.setConfig({ ...config, type: config.type || type });
     },
     [config, hass, type]
   );
 
-  const card = useMemo(
-    // @ts-expect-error custom element props
-    () => (!hass ? undefined : <ElementTag ref={ref}>{children}</ElementTag>),
-    [ElementTag, children, hass, ref]
-  );
-
-  return card;
+  // @ts-expect-error custom element props
+  return <ElementTag ref={ref}>{children}</ElementTag>;
 };

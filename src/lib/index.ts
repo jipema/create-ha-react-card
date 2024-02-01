@@ -1,10 +1,6 @@
-export { createReactHassCard, useLovelaceCard } from "./createReactHassCard";
+export { createReactHassCard, useHaElement, useLovelaceCard } from "./createReactHassCard";
 export type { HassCardProps, HassCardConfig } from "./createReactHassCard";
 
 export { mockReactCardProps } from "../utils/mock";
 
-export type {
-  HomeAssistant,
-  LovelaceCard,
-  LovelaceCardConfig,
-} from "custom-card-helpers";
+export type { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "custom-card-helpers";
