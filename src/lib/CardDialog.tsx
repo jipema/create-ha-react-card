@@ -1,6 +1,7 @@
 import React, { useCallback, useRef } from "react";
 
-export type CardDialogProps = React.PropsWithChildren & {
+export type CardDialogProps = {
+  content: React.ReactNode;
   title?: React.ReactNode | false;
   titleHover?: string;
   fullScreenOnMobile?: boolean;
@@ -10,7 +11,7 @@ export type CardDialogProps = React.PropsWithChildren & {
 export function CardDialog({
   title,
   titleHover,
-  children,
+  content,
   fullScreenOnMobile = true,
   onClose,
 }: CardDialogProps) {
@@ -93,7 +94,7 @@ export function CardDialog({
           className="content"
           style={{ padding: 16, paddingTop: title !== false ? 0 : undefined }}
         >
-          {children}
+          {content}
         </div>
       </div>
     </ha-dialog>

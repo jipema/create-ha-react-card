@@ -14,12 +14,12 @@ export function CardWrapper({ Component, ...props }: CardWrapperProps) {
   }, []);
   const handleCloseDialog = useCallback(() => setDialog(null), []);
 
-  const handleOpenEntityMoreInfo = useCallback(() => {
+  const handleOpenEntityMoreInfo = useCallback((entityId: string) => {
     const haEl = document.querySelector("home-assistant");
     if (!haEl) return;
 
     const event = new CustomEvent("hass-more-info", {
-      detail: { entityId: "switch.dashboard_monitor" },
+      detail: { entityId: entityId },
     });
     haEl.dispatchEvent(event);
   }, []);
