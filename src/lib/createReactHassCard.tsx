@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from "react";
+import React, { memo, useCallback, useEffect, useRef } from "react";
 import ReactDOM from "react-dom/client";
 
 import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "custom-card-helpers";
@@ -140,21 +140,36 @@ export const useLovelaceCard = (
   type: string,
   hass?: HomeAssistant,
   config?: Omit<LovelaceCardConfig, "type">,
-  children?: React.ReactNode
+  children?: React.ReactNode,
+  tagPrefix: string = "hui-",
+  tagSuffix: string = "-card"
 ) => {
-  const CardTag = `hui-${type}-card`;
-  const refFn = useCallback(
-    (el: LovelaceCard) => {
-      if (!el || !hass) return;
+  const CardTag = `${tagPrefix}${type}${tagSuffix}`;
 
-      el.hass = hass;
-      if (config && el.setConfig) el.setConfig({ ...config, type: config.type || type });
+  const cardRef = useRef<LovelaceCard>();
+  const updateCardHass = useCallback(() => {
+    if (!cardRef.current || !hass) return;
+    cardRef.current.hass = hass;
+  }, [hass]);
+  useEffect(() => updateCardHass(), [updateCardHass]);
+
+  const updateCardConfig = useCallback(() => {
+    if (!cardRef.current || !hass) return;
+    cardRef.current.setConfig({ ...(config || {}), type: config?.type || type });
+  }, [config, hass, type]);
+
+  const updateRef = useCallback(
+    (el: LovelaceCard | null) => {
+      cardRef.current = el || undefined;
+      updateCardHass();
+      updateCardConfig();
     },
-    [config, hass, type]
+    [updateCardConfig, updateCardHass]
   );
+  useEffect(() => updateCardConfig(), [updateCardConfig]);
 
   // @ts-expect-error custom element props
-  return <CardTag ref={refFn}>{children}</CardTag>;
+  return <CardTag ref={updateRef}>{children}</CardTag>;
 };
 
 export const useHaElement = (
@@ -162,18 +177,4 @@ export const useHaElement = (
   hass?: HomeAssistant,
   config?: Omit<LovelaceCardConfig, "type">,
   children?: React.ReactNode
-) => {
-  const ElementTag = `ha-${type}`;
-  const ref = useCallback(
-    (el: LovelaceCard) => {
-      if (!el || !hass) return;
-
-      el.hass = hass;
-      if (config && el.setConfig) el.setConfig({ ...config, type: config.type || type });
-    },
-    [config, hass, type]
-  );
-
-  // @ts-expect-error custom element props
-  return <ElementTag ref={ref}>{children}</ElementTag>;
-};
+) => useLovelaceCard(type, hass, config, children, "ha-", "");
