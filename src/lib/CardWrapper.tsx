@@ -33,9 +33,11 @@ export function CardWrapper({ Component, ...props }: CardWrapperProps) {
     haEl.dispatchEvent(event);
   }, []);
 
+  const handleDialogClose = useCallback(() => setDialog(null), []);
+
   return (
     <>
-      {!!dialog && <CardDialog {...dialog} />}
+      {!!dialog && <CardDialog {...dialog} onClose={handleDialogClose} />}
       <Component
         {...props}
         openDialog={handleOpenDialog}
