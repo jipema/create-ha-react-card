@@ -1,6 +1,7 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { CardDialog, CardDialogProps } from "./CardDialog";
 import { HassCardProps } from "./createReactHassCard";
+import { Deferred } from "../utils/misc";
 
 type CardWrapperProps = HassCardProps & {
   Component: React.FC<HassCardProps & unknown>;
@@ -9,8 +10,12 @@ type CardWrapperProps = HassCardProps & {
 export function CardWrapper({ Component, ...props }: CardWrapperProps) {
   const [dialog, setDialog] = useState<CardDialogProps | null>(null);
 
-  const handleOpenDialog = useCallback((dialogProps: CardDialogProps) => {
+  const dialogPromRef = useRef<Deferred>();
+  const handleOpenDialog = useCallback(async (dialogProps: CardDialogProps) => {
+    const def = new Deferred();
+    dialogPromRef.current = def;
     setDialog(dialogProps);
+    return def.promise;
   }, []);
   const handleCloseDialog = useCallback(() => setDialog(null), []);
 
@@ -33,7 +38,12 @@ export function CardWrapper({ Component, ...props }: CardWrapperProps) {
     haEl.dispatchEvent(event);
   }, []);
 
-  const handleDialogClose = useCallback(() => setDialog(null), []);
+  const handleDialogClose = useCallback(() => {
+    setDialog(null);
+    if (dialogPromRef.current?.promise && dialogPromRef.current?.resolve) {
+      dialogPromRef.current.resolve(undefined);
+    }
+  }, []);
 
   return (
     <>

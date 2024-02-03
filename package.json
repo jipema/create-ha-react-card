@@ -2,7 +2,7 @@
   "name": "create-react-hass-card",
   "description": "Create React Hass Card",
   "private": false,
-  "version": "0.0.1-beta.18",
+  "version": "0.0.1-beta.25",
   "type": "module",
   "scripts": {
     "dev": "vite --host",

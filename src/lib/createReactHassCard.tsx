@@ -27,7 +27,7 @@ export type HassCardProps = {
   hass?: HomeAssistant;
   config?: HassCardConfig;
   narrow?: boolean;
-  openDialog: (dialogParams: CardDialogProps) => void;
+  openDialog: (dialogParams: CardDialogProps) => Promise<void>;
   closeDialog: () => void;
   openEntityMoreInfo: (entityId: string) => void;
   closeEntityMoreInfo: () => void;
@@ -59,7 +59,7 @@ export function createReactHassCard(cardName: string, Component: React.FC<HassCa
       hass: undefined,
       config: undefined,
       narrow: false,
-      openDialog: () => undefined,
+      openDialog: async () => undefined,
       closeDialog: () => undefined,
       openEntityMoreInfo: () => undefined,
       closeEntityMoreInfo: () => undefined,

@@ -21,10 +21,19 @@ export const omit: Omit = (obj, ...keys) => {
 
 export function isPanelValue(value: unknown): value is Panel {
   return (
-    !!value &&
-    typeof value === "object" &&
-    "config" in value &&
-    !!value.config &&
-    typeof value.config === "object"
+    !!value && typeof value === "object" && "config" in value && !!value.config && typeof value.config === "object"
   );
+}
+
+export class Deferred {
+  promise: Promise<undefined>;
+  reject?: () => void;
+  resolve?: (value: PromiseLike<undefined> | undefined) => void;
+
+  constructor() {
+    this.promise = new Promise((resolve, reject) => {
+      this.reject = reject;
+      this.resolve = resolve;
+    });
+  }
 }
