@@ -171,10 +171,3 @@ export const useLovelaceCard = (
   // @ts-expect-error custom element props
   return <CardTag ref={updateRef}>{children}</CardTag>;
 };
-
-export const useHaElement = (
-  type: string,
-  hass?: HomeAssistant,
-  config?: Omit<LovelaceCardConfig, "type">,
-  children?: React.ReactNode
-) => useLovelaceCard(type, hass, config, children, "ha-", "");
