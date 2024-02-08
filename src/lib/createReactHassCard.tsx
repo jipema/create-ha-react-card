@@ -50,7 +50,12 @@ export type HassCardConfig = Record<string, unknown> & {
   };
 };
 
-export function createReactHassCard(cardName: string, Component: React.FC<HassCardProps & unknown>, cardSize?: number) {
+export function createReactHassCard(
+  cardName: string,
+  Component: React.FC<HassCardProps & unknown>,
+  cardSize?: number,
+  debounceMs: number = 1000
+) {
   const ComponentMemo = memo(Component);
 
   class HassCard extends HTMLElement {
@@ -84,8 +89,20 @@ export function createReactHassCard(cardName: string, Component: React.FC<HassCa
       return cardSize || 1;
     }
 
+    private _hassUpdateInterval: NodeJS.Timeout | void = undefined;
+    private _lastHassUpdate: Date | void = undefined;
     set hass(newVal: typeof this._props.hass) {
-      this.updateProps("hass", newVal);
+      if (this._hassUpdateInterval) this._hassUpdateInterval = clearInterval(this._hassUpdateInterval);
+      if (!debounceMs || !this._lastHassUpdate) {
+        this.updateProps("hass", newVal);
+      } else {
+        const now = new Date();
+        if (now && this._lastHassUpdate && now.getTime() - this._lastHassUpdate.getTime() > debounceMs) {
+          this.updateProps("hass", newVal);
+        } else {
+          this._hassUpdateInterval = setInterval(() => this.updateProps("hass", newVal), debounceMs);
+        }
+      }
     }
     set narrow(newVal: typeof this._props.narrow) {
       this.updateProps("narrow", newVal);
@@ -119,8 +136,10 @@ export function createReactHassCard(cardName: string, Component: React.FC<HassCa
         });
       }
 
-      if (name === "hass") this._props["hass"] = value as HassCardProps["hass"];
-      else if (name === "config") this._props["config"] = value as HassCardProps["config"];
+      if (name === "hass") {
+        this._props["hass"] = value as HassCardProps["hass"];
+        this._lastHassUpdate = new Date();
+      } else if (name === "config") this._props["config"] = value as HassCardProps["config"];
       else if (name === "narrow") this._props["narrow"] = !!value;
 
       if (this._root?.render) {
