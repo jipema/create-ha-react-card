@@ -28,7 +28,7 @@ function ExampleCardComponent({ hass, config, narrow, openDialog, closeDialog, o
     <button onClick={()=>closeEntityMoreInfo()}>Close Entity More Info</button>
     <button onClick={()=>openDialog({
       title: 'Demo Dialog',
-      content: <p>Im a custom dialog</p>,
+      content: <p>Im a custom dialog, with JSX content</p>,
     })}>Open Custom Dialog</button>
     <button onClick={()=>closeDialog()}>Close Custom Dialog</button>
   </div>
