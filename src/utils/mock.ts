@@ -1,5 +1,5 @@
 import { NumberFormat, TimeFormat } from "custom-card-helpers";
-import { HassCardProps } from "../lib/createReactHaCard";
+import { HassCardProps } from "../lib/createReactHassCard";
 
 export const mockReactCardProps: HassCardProps = {
   hass: {

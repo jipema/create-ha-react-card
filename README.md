@@ -1,19 +1,19 @@
-# create-ha-react-card
+# create-react-hass-card
 
 A simple tool to help React developers creating Home Assistant Lovelace cards.
 
 ## Content
 
-### createReactHaCard()
+### createReactHassCard()
 
 Create a custom element compatible with Home Assistant Lovelace from a React component.
 
 #### Usage
 
 ```js
-import { createReactHaCard } from "create-ha-react-card";
+import { createReactHassCard } from "create-react-hass-card";
 
-createReactHaCard("name-of-the-card", ReactComponentToConvertToCard);
+createReactHassCard("name-of-the-card", ReactComponentToConvertToCard);
 ```
 
 The react component will receive the matching props, on mount and when `hass` is updated:

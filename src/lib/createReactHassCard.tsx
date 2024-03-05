@@ -50,7 +50,7 @@ export type HassCardConfig = Record<string, unknown> & {
   };
 };
 
-export function createReactHaCard(
+export function createReactHassCard(
   cardName: string,
   Component: React.FC<HassCardProps & unknown>,
   options: {
