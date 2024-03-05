@@ -54,4 +54,4 @@ function ReactCardComponentExample({ hass, config, narrow }) {
 }
 ```
 
-Will render Lovelace a `hui-entities-card` element, passing the provided hass instance and config.
+Will render a Lovelace `hui-entities-card` element, passing the provided hass instance and config.
