@@ -1,8 +1,18 @@
 {
-  "name": "create-react-hass-card",
-  "description": "Create React Hass Card",
+  "name": "create-ha-react-card",
+  "description": "Create Home Assistant Lovelace Card from React component",
+  "keywords": [
+    "react",
+    "home assistant",
+    "card",
+    "lovelace",
+    "custom element",
+    "hass",
+    "ha",
+    "component"
+  ],
   "private": false,
-  "version": "0.0.1-beta.27",
+  "version": "0.0.1-beta.3",
   "type": "module",
   "scripts": {
     "dev": "vite --host",
@@ -15,16 +25,16 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/create-react-hass-card.umd.cjs",
-  "module": "./dist/create-react-hass-card.js",
+  "main": "./dist/create-ha-react-card.umd.cjs",
+  "module": "./dist/create-ha-react-card.js",
   "exports": {
     ".": {
       "import": {
-        "default": "./dist/create-react-hass-card.js",
+        "default": "./dist/create-ha-react-card.js",
         "types": "./dist/lib/index.d.ts"
       },
       "require": {
-        "default": "./dist/create-react-hass-card.umd.cjs",
+        "default": "./dist/create-ha-react-card.umd.cjs",
         "types": "./dist/lib/index.d.ts"
       }
     }

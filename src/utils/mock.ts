@@ -1,5 +1,5 @@
 import { NumberFormat, TimeFormat } from "custom-card-helpers";
-import { HassCardProps } from "../lib/createReactHassCard";
+import { HassCardProps } from "../lib/createReactHaCard";
 
 export const mockReactCardProps: HassCardProps = {
   hass: {
@@ -19,7 +19,7 @@ export const mockReactCardProps: HassCardProps = {
       revoke: async () => undefined,
     },
     connection: {
-      // @ts-expect-error ignore missin stuff
+      // @ts-expect-error ignore missing stuff
       options: {
         setupRetry: 0,
         auth: {

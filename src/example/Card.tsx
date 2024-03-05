@@ -1,18 +1,15 @@
 import { useMemo } from "react";
-import type { HassCardProps } from "../lib/createReactHassCard";
+import type { HassCardProps } from "../lib/createReactHaCard";
 
 function Card({ hass, config }: HassCardProps) {
   const lightsOn = useMemo(
     () =>
-      Object.entries(hass?.states || {}).reduce<string[]>(
-        (out, [id, entity]) => {
-          if (id.indexOf("light.") === 0 && entity.state === "on") {
-            out.push(id);
-          }
-          return out;
-        },
-        []
-      ),
+      Object.entries(hass?.states || {}).reduce<string[]>((out, [id, entity]) => {
+        if (id.indexOf("light.") === 0 && entity.state === "on") {
+          out.push(id);
+        }
+        return out;
+      }, []),
     [hass?.states]
   );
   return (

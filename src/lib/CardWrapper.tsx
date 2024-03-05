@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useState } from "react";
 import { CardDialog, CardDialogProps } from "./CardDialog";
-import { HassCardProps } from "./createReactHassCard";
+import { HassCardProps } from "./createReactHaCard";
 import { Deferred } from "../utils/misc";
 
 type CardWrapperProps = HassCardProps & {

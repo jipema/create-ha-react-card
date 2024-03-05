@@ -50,11 +50,13 @@ export type HassCardConfig = Record<string, unknown> & {
   };
 };
 
-export function createReactHassCard(
+export function createReactHaCard(
   cardName: string,
   Component: React.FC<HassCardProps & unknown>,
-  cardSize?: number,
-  debounceMs: number = 1000
+  options: {
+    cardSize?: number;
+    updateIntervalMs?: number;
+  } = { cardSize: 1, updateIntervalMs: 1000 }
 ) {
   const ComponentMemo = memo(Component);
 
@@ -80,27 +82,29 @@ export function createReactHassCard(
     }
     disconnectedCallback() {
       this._root?.unmount?.();
+      this._root = undefined;
+      if (this._hassUpdateTimeout) this._hassUpdateTimeout = clearTimeout(this._hassUpdateTimeout);
     }
 
     setConfig(newVal: typeof this._props.config) {
       this.updateProps("config", newVal);
     }
     getCardSize() {
-      return cardSize || 1;
+      return options?.cardSize || 1;
     }
 
-    private _hassUpdateInterval: NodeJS.Timeout | void = undefined;
+    private _hassUpdateTimeout: NodeJS.Timeout | void = undefined;
     private _lastHassUpdate: Date | void = undefined;
     set hass(newVal: typeof this._props.hass) {
-      if (this._hassUpdateInterval) this._hassUpdateInterval = clearInterval(this._hassUpdateInterval);
-      if (!debounceMs || !this._lastHassUpdate) {
+      if (this._hassUpdateTimeout) this._hassUpdateTimeout = clearInterval(this._hassUpdateTimeout);
+      if (!options?.updateIntervalMs || !this._lastHassUpdate) {
         this.updateProps("hass", newVal);
       } else {
         const now = new Date();
-        if (now && this._lastHassUpdate && now.getTime() - this._lastHassUpdate.getTime() > debounceMs) {
+        if (now && this._lastHassUpdate && now.getTime() - this._lastHassUpdate.getTime() > options.updateIntervalMs) {
           this.updateProps("hass", newVal);
         } else {
-          this._hassUpdateInterval = setInterval(() => this.updateProps("hass", newVal), debounceMs);
+          this._hassUpdateTimeout = setInterval(() => this.updateProps("hass", newVal), options.updateIntervalMs);
         }
       }
     }
@@ -159,11 +163,9 @@ export const useLovelaceCard = (
   type: string,
   hass?: HomeAssistant,
   config?: Omit<LovelaceCardConfig, "type">,
-  children?: React.ReactNode,
-  tagPrefix: string = "hui-",
-  tagSuffix: string = "-card"
+  children?: React.ReactNode
 ) => {
-  const CardTag = `${tagPrefix}${type}${tagSuffix}`;
+  const CardTag = type;
 
   const cardRef = useRef<LovelaceCard>();
   const updateCardHass = useCallback(() => {

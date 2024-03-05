@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 
 import Card from "./Card.tsx";
-import { createReactHassCard } from "../lib/createReactHassCard.tsx";
+import { createReactHaCard } from "../lib/createReactHaCard.tsx";
 import { mockReactCardProps } from "../utils/mock.ts";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -11,4 +11,4 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   </React.StrictMode>
 );
 
-createReactHassCard("react-card", Card);
+createReactHaCard("react-card", Card);

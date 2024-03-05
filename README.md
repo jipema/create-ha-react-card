@@ -1,27 +1,57 @@
-# Create React Hass Card
+# create-ha-react-card
 
-A simple tool to help React developers building Home Assistant Lovelace cards.
+A simple tool to help React developers creating Home Assistant Lovelace cards.
 
-Examples will follow in case of interest, but this lib is currently composed of 2 utils:
+## Content
 
-## createReactHassCard
+### createReactHaCard()
 
-```js
-createReactHassCard("name-of-the-card", ReactComponentToConvertToCard);
-```
+Create a custom element compatible with Home Assistant Lovelace from a React component.
 
-Where the react component will receive the matching props:
+#### Usage
 
 ```js
-function ReactComponentToConvertToCard({ hass, config, narrow }) {}
+import { createReactHaCard } from "create-ha-react-card";
+
+createReactHaCard("name-of-the-card", ReactComponentToConvertToCard);
 ```
 
-## useLovelaceCard
+The react component will receive the matching props, on mount and when `hass` is updated:
 
-```js
-useLovelaceCard("entities", hass, {
-  entities: ["light.living", "light.bedroom"],
-});
+```jsx
+function ExampleCardComponent({ hass, config, narrow, openDialog, closeDialog, openEntityMoreInfo, closeEntityMoreInfo }) {
+  // do something with the passed props
+  return <div>
+    <h2>I am a Home Assitant Card created with React.<h2>
+    <p>Hass currently has {Object.keys(hass?.state || {}).length} entities.</p>
+    <button onClick={()=>openEntityMoreInfo('light.bedroom_light')}>Open Entity More Info</button>
+    <button onClick={()=>closeEntityMoreInfo()}>Close Entity More Info</button>
+    <button onClick={()=>openDialog({
+      title: 'Demo Dialog',
+      content: <p>Im a custom dialog</p>,
+    })}>Open Custom Dialog</button>
+    <button onClick={()=>closeDialog()}>Close Custom Dialog</button>
+  </div>
+}
 ```
 
-Will use Lovelace ``hui-entities-card` passing the hass instance and config, and return a ReactNode.
+### useLovelaceCard()
+
+Render Home Assistant Lovelace cards within your react component React.
+
+#### Usage
+
+```jsx
+function ReactCardComponentExample({ hass, config, narrow }) {
+  const entitiesCard = useLovelaceCard("hui-entities-card", hass, {
+    entities: ["light.living", "light.bedroom"],
+  });
+
+  return <div>
+    <h2>I am a Home Assitant Card created with React.<h2>
+    {entitiesCard}
+  </div>
+}
+```
+
+Will render Lovelace a `hui-entities-card` element, passing the provided hass instance and config.

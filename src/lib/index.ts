@@ -1,5 +1,5 @@
-export { createReactHassCard, useLovelaceCard } from "./createReactHassCard";
-export type { HassCardProps, HassCardConfig } from "./createReactHassCard";
+export { createReactHaCard, renderLovelaceCard as useLovelaceCard } from "./createReactHaCard";
+export type { HassCardProps, HassCardConfig } from "./createReactHaCard";
 
 export { mockReactCardProps } from "../utils/mock";
 
