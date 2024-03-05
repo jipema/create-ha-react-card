@@ -15,10 +15,8 @@
   "version": "0.0.1-beta.3",
   "type": "module",
   "scripts": {
-    "dev": "vite --host",
     "build": "vite build && tsc src/lib/index.ts --skipLibCheck true --declaration --emitDeclarationOnly --jsx react --esModuleInterop --outDir dist",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview --host",
     "publish:beta": "npm run build && npm publish --tag beta",
     "publish:release": "npm run build && npm publish"
   },
