@@ -25,7 +25,12 @@ declare module "react" {
 
 export type HassCardProps = {
   hass?: HomeAssistant;
-  config?: HassCardConfig;
+  lovelace?: Record<string, unknown>;
+  route?: Record<string, unknown>;
+  config?: Record<string, unknown>;
+  panel?: Record<string, unknown>;
+  isConfig?: boolean;
+  updateConfig?: (newConfig: HassCardProps["config"]) => void;
   narrow?: boolean;
   openDialog: (dialogParams: CardDialogProps) => Promise<void>;
   closeDialog: () => void;
@@ -66,6 +71,7 @@ export function createReactHassCard(
       hass: undefined,
       config: undefined,
       narrow: false,
+      lovelace: undefined,
       openDialog: async () => undefined,
       closeDialog: () => undefined,
       openEntityMoreInfo: () => undefined,
@@ -89,8 +95,33 @@ export function createReactHassCard(
     setConfig(newVal: typeof this._props.config) {
       this.updateProps("config", newVal);
     }
+
+    // lovelace layout
     getCardSize() {
       return options?.cardSize || 1;
+    }
+
+    // lovelace card config
+    static getStubConfig() {
+      return { entity: "sun.sun" };
+    }
+    static getConfigElement() {
+      const configCard = document.createElement(`${cardName}`);
+      // @ts-expect-error custom element has custom (untyped?) properties
+      configCard.isConfig = true;
+      // @ts-expect-error custom element has custom (untyped?) properties
+      configCard.updateConfig = (newConfig: typeof this._haProps.config) => {
+        // @ts-expect-error custom element has custom (untyped?) properties
+        configCard?.setConfig?.(newConfig);
+        const event = new Event("config-changed", {
+          bubbles: true,
+          composed: true,
+        });
+        // @ts-expect-error custom element has custom (untyped?) properties
+        event.detail = { config: newConfig };
+        configCard?.dispatchEvent?.(event);
+      };
+      return configCard;
     }
 
     private _hassUpdateTimeout: NodeJS.Timeout | void = undefined;
@@ -108,17 +139,26 @@ export function createReactHassCard(
         }
       }
     }
+    set panel(newVal: typeof this._props.panel) {
+      this.updateProps("panel", newVal);
+    }
     set narrow(newVal: typeof this._props.narrow) {
       this.updateProps("narrow", newVal);
     }
-    set panel(newVal: typeof this._props.hass) {
-      this.updateProps("panel", newVal);
-    }
-    set route(newVal: typeof this._props.hass) {
+    set route(newVal: typeof this._props.route) {
       this.updateProps("route", newVal);
     }
+    set lovelace(newVal: typeof this._props.lovelace) {
+      this.updateProps("lovelace", newVal);
+    }
+    set isConfig(newVal: typeof this._props.isConfig) {
+      this.updateProps("lovelace", newVal);
+    }
+    set updateConfig(newVal: typeof this._props.updateConfig) {
+      this.updateProps("updateConfig", newVal);
+    }
 
-    updateProps(name: keyof typeof this._props | "panel" | "route", value: unknown): void {
+    updateProps(name: keyof typeof this._props, value: unknown): void {
       if (!name) return;
 
       if (name === "panel" && isPanelValue(value)) {
